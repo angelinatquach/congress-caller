@@ -97,6 +97,7 @@ traitlets==4.2.1
 >>>>>>> 3cec35a... shorten requirements.txt
 twilio==6.41.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 twython==3.4.0
 typing==3.7.4.1
@@ -111,3 +112,6 @@ xlwt==1.1.2
 =======
 twilio==6.41.0
 >>>>>>> 9d83f61... shorten requirements.txt
+=======
+boto==2.49.0
+>>>>>>> 5efef40... Update requirements.txt with boto
