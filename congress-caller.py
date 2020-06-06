@@ -1,12 +1,13 @@
 from twilio.rest import Client
 from datetime import datetime
+from boto.s3.connection import S3Connection
 import time
 import os
 
 def callCongress():
-	account_sid = os.getenv('ACCOUNT_SID')
-	auth_token = os.getenv('AUTH_TOKEN')
-	fromNumber = os.getenv('TWILIO_PHONE')
+	account_sid = S3Connection(os.environ['ACCOUNT_SID'])
+	auth_token = S3Connection(os.environ['AUTH_TOKEN'])
+	fromNumber = S3Connection(os.environ['TWILIO_PHONE'])
 	#phoneNumbers = ['16503420300', '2022253531'];
 	phoneNumbers = ['7147208654'];
 	message = '''<Response><Say voice="Polly.Emma" language="en-US"> Hello, Congress woman Jackie Speier. My name is Angelina, and I am a
