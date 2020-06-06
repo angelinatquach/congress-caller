@@ -58,9 +58,12 @@ def callCongress():
                                )
 
             print("Call SID: %s" % (call.sid))
+            #take a break every 5 minutes
+            #time.sleep(300)            
 
-            #calls every 30 minutes
-            time.sleep(1800)            
+        #calls every 30 minutes
+        time.sleep(1800)            
+
 
 def main():
     print('Initializing Congress caller bot\n')
