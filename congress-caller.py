@@ -8,14 +8,9 @@ import os
 
 def callCongress():
     #TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables
-    api_key = os.environ['API_KEY']
     account_sid = os.environ['ACCOUNT_SID']
     auth_token = os.environ['AUTH_TOKEN']
     fromNumber = os.environ['TWILIO_PHONE']
-
-    senateUrl = "https://api.propublica.org/congress/v1/116/senate/members.json"
-    houseUrl = "https://api.propublica.org/congress/v1/116/house/members.json"
-    headers = {'x-api-key': api_key}
 
     #TODO: Replace {2} with your name if you'd like. Otherwise, it's randomized.
     message = '''<Response><Say voice="Polly.Emma" language="en-US"> Hello, Congress leader {0} {1}. My name is {2}, and I am a
@@ -33,13 +28,7 @@ def callCongress():
     I urge you to vote YES to pass the End Qualified Immunity Act. Thanks for your time and attention today! </Say></Response>''';
 
     callerClient = Client(account_sid, auth_token)
-    senateMembers = requests.get(senateUrl, headers=headers).json()["results"][0]["members"]
-    houseMembers = requests.get(houseUrl, headers=headers).json()["results"][0]["members"]
-
-    #TODO: Replace CA with your state
-    senate = (member for member in senateMembers if member["state"] == "CA")
-    house = (member for member in houseMembers if member["state"] == "CA")
-    congress = chain(senate, house)
+    congress = getCongressMembers()
 
     while True:
         for member in congress:
@@ -59,11 +48,23 @@ def callCongress():
 
             print("Call SID: %s" % (call.sid))
             #take a break every 5 minutes
-            #time.sleep(300)            
+            time.sleep(300)            
+                   
 
-        #calls every 30 minutes
-        time.sleep(1800)            
+def getCongressMembers():
+    api_key = os.environ['API_KEY']
 
+    senateUrl = "https://api.propublica.org/congress/v1/116/senate/members.json"
+    houseUrl = "https://api.propublica.org/congress/v1/116/house/members.json"
+    headers = {'x-api-key': api_key}
+
+    senateMembers = requests.get(senateUrl, headers=headers).json()["results"][0]["members"]
+    houseMembers = requests.get(houseUrl, headers=headers).json()["results"][0]["members"]
+
+    #TODO: Replace CA with your state
+    senate = (member for member in senateMembers if member["state"] == "CA")
+    house = (member for member in houseMembers if member["state"] == "CA")
+    return chain(senate, house)
 
 def main():
     print('Initializing Congress caller bot\n')
