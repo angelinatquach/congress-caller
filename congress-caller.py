@@ -42,7 +42,7 @@ def callCongress():
             call = callerClient.calls.create(
                                    status_callback_event = ['initiated', 'answered'],
                                    twiml = message.format(memberFirstName, memberLastName, callerName),
-                                   to = "7147208654", #memberPhoneNumber,
+                                   to = memberPhoneNumber,
                                    from_ = fromNumber
                                )
 
