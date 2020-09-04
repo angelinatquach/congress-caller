@@ -7,14 +7,14 @@ import time
 import os
 
 def callCongress():
-    #TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables
+    #TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables on Heroku 
     account_sid = os.environ['ACCOUNT_SID']
     auth_token = os.environ['AUTH_TOKEN']
     fromNumber = os.environ['TWILIO_PHONE']
 
     #TODO: Replace {2} with your name if you'd like. Otherwise, it's randomized.
     message = '''<Response><Say voice="Polly.Emma" language="en-US"> Hello, Congress leader {0} {1}. My name is {2}, and I am a
-    California resident. It is very important to me that you pass the End Qualified Immunity Act. Qualified immunity means that victims of brutality or harassment 
+    California resident. It is very important to me that you pass the Ending Qualified Immunity Act. Qualified immunity means that victims of brutality or harassment 
     by law enforcement almost always get no relief in court and have no ability to hold offending officers accountable for their actions.
     That means the officers who commit the brutality and harassment that we are witnessing in the news today, and the governments that employ them,
     have little incentive to improve their practices, follow the law, and protect the people. Police are legally, politically, and culturally insulated
@@ -25,7 +25,7 @@ def callCongress():
     also provide a powerful incentive for municipalities to restructure their law enforcement agencies and adopt policies and practices that curtail 
     abuses of power.
 
-    I urge you to vote YES to pass the End Qualified Immunity Act. Thanks for your time and attention today! </Say></Response>''';
+    I urge you to vote YES to pass the Ending Qualified Immunity Act. Thanks for your time and attention today! </Say></Response>''';
 
     callerClient = Client(account_sid, auth_token)
     congress = getCongressMembers()
@@ -47,8 +47,8 @@ def callCongress():
                                )
 
             print("Call SID: %s" % (call.sid))
-            #take a break every 5 minutes
-            time.sleep(300)            
+            #take a break every 15 minutes
+            time.sleep(900)            
                    
 
 def getCongressMembers():
