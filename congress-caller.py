@@ -1,16 +1,16 @@
 from twilio.rest import Client
 from datetime import datetime
 from itertools import chain
-import names
-import requests
-import time
-import os
+import names        #randomized names
+import requests     #HTTP requests
+import time         #sleep fxn
+import os           #env vars
 
 def callCongress():
     #TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables on Heroku 
-    account_sid = os.environ['ACCOUNT_SID']
-    auth_token = os.environ['AUTH_TOKEN']
-    fromNumber = os.environ['TWILIO_PHONE']
+    account_sid = os.environ['ACCOUNT_SID']     #Twilio
+    auth_token = os.environ['AUTH_TOKEN']       #Twilio
+    fromNumber = os.environ['TWILIO_PHONE']     #Twilio
 
     #TODO: Replace {2} with your name if you'd like. Otherwise, it's randomized.
     message = '''<Response><Say voice="Polly.Emma" language="en-US"> Hello, Congress leader {0} {1}. My name is {2}, and I am a
@@ -47,12 +47,13 @@ def callCongress():
                                )
 
             print("Call SID: %s" % (call.sid))
-            #take a break every 15 minutes
-            time.sleep(900)            
+
+            #take a break every 20 minutes
+            time.sleep(1200)            
                    
 
 def getCongressMembers():
-    api_key = os.environ['API_KEY']
+    api_key = os.environ['API_KEY']         #ProPublica
 
     senateUrl = "https://api.propublica.org/congress/v1/116/senate/members.json"
     houseUrl = "https://api.propublica.org/congress/v1/116/house/members.json"
