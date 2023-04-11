@@ -28,20 +28,22 @@ def call_congress_handler():
     I urge you to vote YES to pass the Ending Qualified Immunity Act. Thanks for your time and attention today! </Say></Response>''';
 
     caller_client = Client(account_sid, auth_token)
-    congress = get_congress_members()
+    congress_members = get_congress_members()
 
     while True:
-        for member in congress:
+        for member in congress_members:
             member_first_name = member["first_name"]
             member_last_name = member["last_name"]   
             member_phone_number = member["phone"]
-            callerName = names.get_first_name(gender="female")
+            
+            # get random female name to act as caller agent
+            caller_name = names.get_first_name(gender="female")
 
             print("[%s] Time to call %s %s" % (datetime.now(), member_first_name, member_last_name))
 
             call = caller_client.calls.create(
                status_callback_event = ["initiated", "answered"],
-               twiml = message.format(member_first_name, member_last_name, callerName),
+               twiml = message.format(member_first_name, member_last_name, caller_name),
                to = member_first_name,
                from_ = from_number
            )
@@ -57,7 +59,7 @@ def get_congress_members():
 
     senate_url = "https://api.propublica.org/congress/v1/116/senate/members.json"
     house_url = "https://api.propublica.org/congress/v1/116/house/members.json"
-    headers = {'x-api-key': api_key}
+    headers = {"x-api-key": api_key}
 
     senate_members = requests.get(senate_url, headers=headers).json()["results"][0]["members"]
     house_members = requests.get(house_url, headers=headers).json()["results"][0]["members"]
