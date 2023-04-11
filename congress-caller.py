@@ -1,16 +1,16 @@
 from twilio.rest import Client
 from datetime import datetime
 from itertools import chain
-import names        #randomized names
-import requests     #HTTP requests
-import time         #sleep fxn
-import os           #env vars
+import names        # randomized names
+import requests     # HTTP requests
+import time         # sleep fxn
+import os           # env vars
 
-def callCongress():
-    #TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables on Heroku 
-    account_sid = os.environ['ACCOUNT_SID']     #Twilio
-    auth_token = os.environ['AUTH_TOKEN']       #Twilio
-    fromNumber = os.environ['TWILIO_PHONE']     #Twilio
+def call_congress_handler():
+    # TODO: Get ProPublica and Twilio Api Key/Auth Tokens, save as env variables on Heroku 
+    account_sid = os.environ["ACCOUNT_SID"]     # Twilio
+    auth_token = os.environ["AUTH_TOKEN"]       # Twilio
+    from_number = os.environ["TWILIO_PHONE"]     # Twilio
 
     #TODO: Replace {2} with your name if you'd like. Otherwise, it's randomized.
     message = '''<Response><Say voice="Polly.Emma" language="en-US"> Hello, Congress leader {0} {1}. My name is {2}, and I am a
@@ -27,49 +27,49 @@ def callCongress():
 
     I urge you to vote YES to pass the Ending Qualified Immunity Act. Thanks for your time and attention today! </Say></Response>''';
 
-    callerClient = Client(account_sid, auth_token)
-    congress = getCongressMembers()
+    caller_client = Client(account_sid, auth_token)
+    congress = get_congress_members()
 
     while True:
         for member in congress:
-            memberFirstName = member["first_name"]
-            memberLastName = member["last_name"]   
-            memberPhoneNumber = member["phone"]
-            callerName = names.get_first_name(gender='female')
+            member_first_name = member["first_name"]
+            member_last_name = member["last_name"]   
+            member_phone_number = member["phone"]
+            callerName = names.get_first_name(gender="female")
 
-            print("[%s] Time to call %s %s" % (datetime.now(), memberFirstName, memberLastName))
+            print("[%s] Time to call %s %s" % (datetime.now(), member_first_name, member_last_name))
 
-            call = callerClient.calls.create(
-                                   status_callback_event = ['initiated', 'answered'],
-                                   twiml = message.format(memberFirstName, memberLastName, callerName),
-                                   to = memberPhoneNumber,
-                                   from_ = fromNumber
-                               )
+            call = caller_client.calls.create(
+               status_callback_event = ["initiated", "answered"],
+               twiml = message.format(member_first_name, member_last_name, callerName),
+               to = member_first_name,
+               from_ = from_number
+           )
 
             print("Call SID: %s" % (call.sid))
 
-            #take a break every 20 minutes
+            # take a break every 20 minutes
             time.sleep(1200)            
                    
 
-def getCongressMembers():
-    api_key = os.environ['API_KEY']         #ProPublica
+def get_congress_members():
+    api_key = os.environ["API_KEY"]         # ProPublica
 
-    senateUrl = "https://api.propublica.org/congress/v1/116/senate/members.json"
-    houseUrl = "https://api.propublica.org/congress/v1/116/house/members.json"
+    senate_url = "https://api.propublica.org/congress/v1/116/senate/members.json"
+    house_url = "https://api.propublica.org/congress/v1/116/house/members.json"
     headers = {'x-api-key': api_key}
 
-    senateMembers = requests.get(senateUrl, headers=headers).json()["results"][0]["members"]
-    houseMembers = requests.get(houseUrl, headers=headers).json()["results"][0]["members"]
+    senate_members = requests.get(senate_url, headers=headers).json()["results"][0]["members"]
+    house_members = requests.get(house_url, headers=headers).json()["results"][0]["members"]
 
-    #TODO: Replace CA with your state
-    senate = (member for member in senateMembers if member["state"] == "CA")
-    house = (member for member in houseMembers if member["state"] == "CA")
+    # TODO: Replace CA with your state
+    senate = (member for member in senate_members if member["state"] == "CA")
+    house = (member for member in house_members if member["state"] == "CA")
     return chain(senate, house)
 
 def main():
-    print('Initializing Congress caller bot\n')
-    callCongress()
+    print("Initializing Congress caller bot\n")
+    call_congress_handler()
 
 
 if __name__ == '__main__':
